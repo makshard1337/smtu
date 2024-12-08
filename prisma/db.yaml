@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: "news"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "12345678"
+    ports:
+      - "5432:5432"
