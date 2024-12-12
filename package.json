@@ -6,13 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "db:seed": "prisma db seed"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.0.1",
+    "@prisma/client": "5.22.0",
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.16",
     "date-fns": "^2.30.0",

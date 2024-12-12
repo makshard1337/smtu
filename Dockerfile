@@ -1,18 +1,23 @@
-FROM node:18-alpine AS builder
+# Build stage
+FROM node:18-slim AS builder
+
+# Install dependencies required for Prisma
+RUN apt-get update && \
+    apt-get install -y openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install pnpm
 RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files and prisma schema first
 COPY package.json pnpm-lock.yaml ./
-
-# Copy prisma schema and migrations
 COPY prisma ./prisma/
 
-# Install dependencies with frozen lockfile
-RUN pnpm install --frozen-lockfile
+# Install all dependencies (including devDependencies)
+RUN pnpm install
 
 # Generate Prisma Client
 RUN pnpm prisma generate
@@ -20,38 +25,34 @@ RUN pnpm prisma generate
 # Copy the rest of the application
 COPY . .
 
-# Set environment variables for build
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
-
 # Build the application
-RUN pnpm build
+RUN pnpm run build
 
-# Production image, copy all the files and run next
-FROM node:18-alpine AS runner
+# Production stage
+FROM node:18-slim AS runner
+
+# Install dependencies required for Prisma
+RUN apt-get update && \
+    apt-get install -y openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy built application
+# Copy necessary files from builder
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/pnpm-lock.yaml .
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
 
-# Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
-
-# Generate Prisma Client for production
-RUN pnpm prisma generate
-
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["pnpm", "start"]
