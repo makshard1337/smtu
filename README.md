@@ -1,1 +1,1 @@
-![Uploading gif_file.gif…]()
+gif_file.gif
