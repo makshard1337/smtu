@@ -1,1 +1,1 @@
-gif_file.gif
+![GIF](gif_file.gif)
