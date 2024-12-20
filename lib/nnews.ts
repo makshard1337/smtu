@@ -11,7 +11,7 @@ export async function myNews() {
             Участие в карьерном форуме «Найти IT» стало отличной возможностью для студентов \
             не только узнать о текущих тенденциях на рынке труда, но и расширить свои профессиональные горизонты!',
             date: new Date('2024-10-12'),
-            image: 'fhttps://sun9-79.userapi.com/impg/rIPcRyrE3wTFye8ZHOyhuCNS7sf_4M3d0wv-yQ/8SqMm9kiV-c.jpg?size=1751x2160&quality=95&sign=712fa74afcc572ee890080ee93e3c66e&type=album'
+            image: 'https://sun9-79.userapi.com/impg/rIPcRyrE3wTFye8ZHOyhuCNS7sf_4M3d0wv-yQ/8SqMm9kiV-c.jpg?size=1751x2160&quality=95&sign=712fa74afcc572ee890080ee93e3c66e&type=album'
         },
         {
             title: 'День открытых дверей ФЦПТ',
